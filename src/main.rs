@@ -1,9 +1,12 @@
 mod args;
 mod klennz;
+mod randomextra;
 use crate::args::CommandParse;
 use crate::args::Commands;
 use crate::klennz::load_data;
 use crate::klennz::predict;
+use crate::randomextra::randomextra;
+use crate::randomextra::trainradom_agrresive;
 use clap::Parser;
 use figlet_rs::FIGfont;
 use smartcore::ensemble::random_forest_classifier::RandomForestClassifier;
@@ -62,6 +65,33 @@ fn main() {
                     "The decision classifier has the model accuracy:{}",
                     decisionaccuracy
                 );
+            });
+        }
+        Commands::RandomSeq {
+            pathfileinput,
+            predictfileinput,
+            threads,
+            trees,
+            depth,
+            samplesplitinput,
+        } => {
+            let n_threads = threads.parse::<usize>().expect("thread must be a number");
+            let pool = rayon::ThreadPoolBuilder::new()
+                .num_threads(n_threads)
+                .build()
+                .expect("failed to create thread pool");
+            pool.install(|| {
+                let method = trainradom_agrresive(pathfileinput, predictfileinput).unwrap();
+                let unwrapaggressive = randomextra(
+                    pathfileinput,
+                    predictfileinput,
+                    trees,
+                    depth,
+                    samplesplitinput,
+                )
+                .unwrap();
+                println!("The file has been done: {}", method);
+                println!("The method has been complete: {}", unwrapaggressive);
             });
         }
     }

@@ -26,4 +26,18 @@ pub enum Commands {
         /// threads for the analysis
         thread: String,
     },
+    RandomSeq {
+        /// path to the file
+        pathfileinput: String,
+        /// predict to be made
+        predictfileinput: String,
+        /// threads for the analysis
+        threads: String,
+        /// trees
+        trees: String,
+        /// max depth
+        depth: String,
+        // samplesplit
+        samplesplitinput: String,
+    },
 }

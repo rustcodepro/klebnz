@@ -71,7 +71,13 @@ pub fn predict<P: AsRef<std::path::Path>>(path: P) -> Result<Vec<Vec<f64>>, Box<
     for i in fileread.lines() {
         let line = i.expect("file not present");
         let linevec = line.split(";").collect::<Vec<_>>();
-        returnvec.push(vec![linevec[0].parse::<f64>().unwrap()]);
+        let add = linevec[1].parse::<f32>().unwrap() * linevec[2].parse::<f32>().unwrap()
+            / (linevec[2].parse::<f32>().unwrap() - linevec[1].parse::<f32>().unwrap());
+        returnvec.push(vec![
+            linevec[0].parse::<f64>().unwrap(),
+            linevec[1].parse::<f64>().unwrap(),
+            add as f64,
+        ]);
     }
     Ok(returnvec)
 }
